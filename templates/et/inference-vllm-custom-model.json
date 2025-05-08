@@ -1,0 +1,851 @@
+{
+    "apiVersion": "eaas.envmgmt.io/v1",
+    "kind": "EnvironmentTemplate",
+    "metadata": {
+      "name": "system-k8s-inference-vllm",
+      "description": "Deploy models with vLLM in Kubernetes environments",
+      "labels": {
+        "paas.envmgmt.io/objectType": "inferences"
+      },
+      "annotations": {
+        "eaas.envmgmt.io/category": "AI/ML",
+        "eaas.envmgmt.io/launchtime": "14",
+        "eaas.envmgmt.io/releaseversion": "v3.3",
+        "eaas.envmgmt.io/usecase": "MLOps (Train-Tune-Serve)",
+        "eaas.envmgmt.io/usecaseCategory": "AI/ML",
+        "paas.envmgmt.io/cost": "$1.0/GPU/hr",
+        "paas.envmgmt.io/outputs": "inference-vllm.url, inference-vllm.token",
+        "paas.envmgmt.io/useComputeInstance": "host_cluster_name"
+      },
+      "displayName": "vLLM Inference on K8s",
+      "project": "system-catalog"
+    },
+    "spec": {
+      "version": "v2-custom-model",
+      "resources": [
+        {
+          "type": "dynamic",
+          "kind": "resourcetemplate",
+          "name": "res-gen-kubeconfig-user",
+          "resourceOptions": {
+            "version": "v1.0"
+          }
+        },
+        {
+          "type": "dynamic",
+          "kind": "resourcetemplate",
+          "name": "res-gen-inference-vllm",
+          "resourceOptions": {
+            "version": "v2-custom-model"
+          },
+          "dependsOn": [
+            {
+              "name": "res-gen-kubeconfig-user"
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "name": "Name",
+          "valueType": "expression",
+          "value": "$(environment.name)$",
+          "options": {
+            "description": "LLM Name",
+            "override": {
+              "type": "notallowed",
+              "selectors": [
+                "resource.*.name"
+              ]
+            },
+            "displayMetadata": {
+              "section": "General",
+              "weight": "10"
+            }
+          }
+        },
+        {
+          "name": "Host Server",
+          "valueType": "expression",
+          "value": "$(resource.\"res-gen-kubeconfig-user\".output.host.value)$",
+          "options": {
+            "description": "Kubeconfig host server",
+            "override": {
+              "type": "notallowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.hserver"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Client Key Data",
+          "valueType": "expression",
+          "value": "$(resource.\"res-gen-kubeconfig-user\".output.clientkeydata.value)$",
+          "options": {
+            "override": {
+              "type": "notallowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.clientkeydata"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Client Certificate Data",
+          "valueType": "expression",
+          "value": "$(resource.\"res-gen-kubeconfig-user\".output.clientcertificatedata.value)$",
+          "options": {
+            "override": {
+              "type": "notallowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.clientcertificatedata"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Certificate Authority Data",
+          "valueType": "expression",
+          "value": "$(resource.\"res-gen-kubeconfig-user\".output.certificateauthoritydata.value)$",
+          "options": {
+            "override": {
+              "type": "notallowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.certificateauthoritydata"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kubeconfig",
+          "valueType": "expression",
+          "value": "$(resource.\"res-gen-kubeconfig-user\".output.kubeconfig.value)$",
+          "options": {
+            "override": {
+              "type": "notallowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.kubeconfig"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Namespace",
+          "valueType": "text",
+          "value": "$(environment.name)$",
+          "options": {
+            "description": "Namespace for model deployment",
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.namespace"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "Model Deployment Details",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": "2029"
+            }
+          }
+        },
+        {
+          "name": "Minio Endpoint",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.minio_endpoint"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Minio Access Key",
+          "valueType": "text",
+          "options": {
+            "sensitive": true,
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.minio_access_key"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Minio Secret Key",
+          "valueType": "text",
+          "options": {
+            "sensitive": true,
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.minio_secret_key"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Bucket Name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.bucket_name"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Served Model Name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.served_model_name"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Model Data Path",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.model_data_path"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Host Name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.host_name"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Certificate Public Key",
+          "valueType": "text",
+          "options": {
+            "sensitive": true,
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.ssl_certificate"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Certificate Private Key",
+          "valueType": "text",
+          "options": {
+            "sensitive": true,
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.ssl_private_key"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Ingress Class Name",
+          "valueType": "text",
+          "value": "nginx",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.ingress_class_name"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "GPU Type",
+          "valueType": "text",
+          "value": "nvidia",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.gpu_type"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "cluster_name",
+          "valueType": "text",
+          "options": {
+            "description": "<cluster_name>",
+            "required": true,
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-kubeconfig-user.cluster_name",
+                "resource.res-gen-dnsconfig.cluster_name"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "GPU Request",
+          "valueType": "text",
+          "value": "1",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.gpu_request"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "Extra Engine Args",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.extra_engine_args"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "Engine arguments control the behavior of the vLLM inference engine. Pass any arguments using the following format: --quantization <value> --<other-argument> <value>",
+              "weight": ""
+            }
+          }
+        },
+        {
+          "name": "VLLM Image",
+          "valueType": "text",
+          "value": "vllm/vllm-openai:v0.7.3",
+          "options": {
+            "override": {
+              "type": "allowed",
+              "selectors": [
+                "resource.res-gen-inference-vllm.vllm_image"
+              ]
+            },
+            "displayMetadata": {
+              "disabled": false,
+              "section": "",
+              "sectionDescription": "",
+              "tooltip": "",
+              "weight": ""
+            }
+          }
+        }
+      ],
+      "contexts": [
+        {
+          "name": "kubeconfig-mounter",
+          "data": {
+            "envs": [
+              {
+                "key": "API Key",
+                "options": {
+                  "description": "Enter the API key of the controller",
+                  "sensitive": true,
+                  "override": {
+                    "type": "allowed",
+                    "selectors": [
+                      "resource.*.RCTL_API_KEY"
+                    ]
+                  },
+                  "required": true
+                }
+              },
+              {
+                "key": "Controller Endpoint",
+                "value": "console.ncpqe-testbed.dev.rafay-edge.net",
+                "options": {
+                  "description": "Enter the endpoint of the controller",
+                  "override": {
+                    "type": "allowed",
+                    "selectors": [
+                      "resource.*.RCTL_REST_ENDPOINT"
+                    ]
+                  },
+                  "required": true
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "versionState": "draft",
+      "iconURL": "/assets/rafay-D9zfRZnZ.png",
+      "readme": "This template enables streamlined deployment of vLLM-based large language model (LLM) inference services on GPU-enabled Kubernetes clusters.\n\n<b>Description:</b>\n\nThis template offers:\n\n• Preconfigured support for popular models (such as LLaMA 3 variants), automatically deploying them with the latest available vLLM image.\n• A flexible input mechanism that allows users to define or extend model options by specifying a combination of GPU type, model name, and image version — all through a single configurable field.\n\n<b>Prerequisites</b>\n\nTo successfully use this template, the following prerequisites must be met:\n\n• A Kubernetes cluster with GPU-enabled nodes that meet the resource requirements of your selected model\n• A Hugging Face access token (with read permission) to download models from Hugging Face\n• Configuration of domain-specific details to route and access the deployed inference endpoint (e.g., DNS, network access, or ingress rules) if “Custom” domain option were to used\n"
+    },
+    "status": {
+      "versions": {},
+      "entityOverrides": [
+        {
+          "metadata": {
+            "name": "system-k8s-inference-vllm"
+          },
+          "variables": [
+            {
+              "name": "Namespace",
+              "valueType": "text",
+              "value": "$(environment.name)$",
+              "options": {
+                "description": "Namespace for model deployment",
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.namespace"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "Model Deployment Details",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": "2029"
+                }
+              }
+            },
+            {
+              "name": "Certificate Public Key",
+              "valueType": "text",
+              "options": {
+                "sensitive": true,
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.ssl_certificate"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "VLLM Image",
+              "valueType": "text",
+              "value": "vllm/vllm-openai:v0.7.3",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.vllm_image"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Bucket Name",
+              "valueType": "text",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.bucket_name"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Host Name",
+              "valueType": "text",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.host_name"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "GPU Type",
+              "valueType": "text",
+              "value": "nvidia",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.gpu_type"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Served Model Name",
+              "valueType": "text",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.served_model_name"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Model Data Path",
+              "valueType": "text",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.model_data_path"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Ingress Class Name",
+              "valueType": "text",
+              "value": "nginx",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.ingress_class_name"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "cluster_name",
+              "valueType": "text",
+              "options": {
+                "description": "<cluster_name>",
+                "required": true,
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-kubeconfig-user.cluster_name",
+                    "resource.res-gen-dnsconfig.cluster_name"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Extra Engine Args",
+              "valueType": "text",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.extra_engine_args"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "Engine arguments control the behavior of the vLLM inference engine. Pass any arguments using the following format: --quantization <value> --<other-argument> <value>",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Minio Endpoint",
+              "valueType": "text",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.minio_endpoint"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Minio Access Key",
+              "valueType": "text",
+              "options": {
+                "sensitive": true,
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.minio_access_key"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Certificate Private Key",
+              "valueType": "text",
+              "options": {
+                "sensitive": true,
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.ssl_private_key"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "GPU Request",
+              "valueType": "text",
+              "value": "1",
+              "options": {
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.gpu_request"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            },
+            {
+              "name": "Minio Secret Key",
+              "valueType": "text",
+              "options": {
+                "sensitive": true,
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.res-gen-inference-vllm.minio_secret_key"
+                  ]
+                },
+                "displayMetadata": {
+                  "disabled": false,
+                  "section": "",
+                  "sectionDescription": "",
+                  "tooltip": "",
+                  "weight": ""
+                }
+              }
+            }
+          ],
+          "envVars": [
+            {
+              "key": "API Key",
+              "options": {
+                "description": "Enter the API key of the controller",
+                "sensitive": true,
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.*.RCTL_API_KEY"
+                  ]
+                },
+                "required": true
+              }
+            },
+            {
+              "key": "Controller Endpoint",
+              "value": "console.ncpqe-testbed.dev.rafay-edge.net",
+              "options": {
+                "description": "Enter the endpoint of the controller",
+                "override": {
+                  "type": "allowed",
+                  "selectors": [
+                    "resource.*.RCTL_REST_ENDPOINT"
+                  ]
+                },
+                "required": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }

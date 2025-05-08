@@ -1,0 +1,193 @@
+{
+    "apiVersion": "eaas.envmgmt.io/v1",
+    "kind": "ResourceTemplate",
+    "metadata": {
+      "name": "res-gen-inference-vllm",
+      "annotations": {
+        "eaas.envmgmt.io/releaseversion": "v3.3"
+      },
+      "project": "system-catalog"
+    },
+    "spec": {
+      "version": "v2-custom-model",
+      "provider": "opentofu",
+      "providerOptions": {
+        "openTofu": {
+          "timeoutSeconds": 36000,
+          "volumes": [
+            {
+              "mountPath": "/tmp/test",
+              "enableBackupAndRestore": true
+            }
+          ],
+          "backendType": "system"
+        }
+      },
+      "repositoryOptions": {
+        "name": "catalog-code",
+        "branch": "RC-1000-custom-model",
+        "directoryPath": "res-tf/res-gen-inference-vllm-custom"
+      },
+      "variables": [
+        {
+          "name": "namespace",
+          "valueType": "expression",
+          "value": "$(environment.name)$",
+          "options": {
+            "description": "The namespace to deploy the cluster.",
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "gpu_request",
+          "valueType": "text",
+          "value": "1",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "gpu_type",
+          "valueType": "text",
+          "value": "nvidia",
+          "options": {
+            "description": "GPU Vendor",
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "minio_endpoint",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "minio_access_key",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "minio_secret_key",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "bucket_name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "served_model_name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "extra_engine_args",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "vllm_image",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "model_data_path",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "host_name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "ssl_certificate",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "ssl_private_key",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        },
+        {
+          "name": "ingress_class_name",
+          "valueType": "text",
+          "options": {
+            "override": {
+              "type": "allowed"
+            }
+          }
+        }
+      ],
+      "sharing": {
+        "enabled": true,
+        "projects": [
+          {
+            "name": "*"
+          }
+        ]
+      },
+      "versionState": "draft",
+      "artifactWorkflowHandler": {
+        "data": {
+          "config": {
+            "type": "container",
+            "container": {
+              "image": "registry.dev.rafay-edge.net/rafay/repodriver:RC-1000-custom-model-3"
+            }
+          }
+        }
+      }
+    }
+  }
