@@ -21,7 +21,7 @@
       "project": "system-catalog"
     },
     "spec": {
-      "version": "v2-custom-model",
+      "version": "v3-custom-model",
       "resources": [
         {
           "type": "dynamic",
@@ -36,7 +36,7 @@
           "kind": "resourcetemplate",
           "name": "res-gen-inference-vllm",
           "resourceOptions": {
-            "version": "v2-custom-model"
+            "version": "v3-custom-model"
           },
           "dependsOn": [
             {

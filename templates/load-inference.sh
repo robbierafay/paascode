@@ -2,10 +2,13 @@
 
 set -eux
 
-ENDPOINT="console.ncpqe-testbed.dev.rafay-edge.net"
 SYSTEM_CATALOG_PROJECT="system-catalog"
 
-# Partner API key
+
+# CHANGE THIS
+ENDPOINT="console.ncpqe-testbed.dev.rafay-edge.net"
+
+# ORG Admin key
 API_KEY="<rafay-api-key>"
 if [ -z "${API_KEY}" ]
 then

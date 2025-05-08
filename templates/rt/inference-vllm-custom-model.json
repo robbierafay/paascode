@@ -9,7 +9,7 @@
       "project": "system-catalog"
     },
     "spec": {
-      "version": "v2-custom-model",
+      "version": "v3-custom-model",
       "provider": "opentofu",
       "providerOptions": {
         "openTofu": {
@@ -24,8 +24,8 @@
         }
       },
       "repositoryOptions": {
-        "name": "catalog-code",
-        "branch": "RC-1000-custom-model",
+        "name": "passcode",
+        "branch": "main",
         "directoryPath": "res-tf/res-gen-inference-vllm-custom"
       },
       "variables": [
