@@ -150,6 +150,12 @@ resource "kubernetes_deployment" "vllm_model_server" {
         }
       }
     }
+    progress_deadline_seconds = var.deployment_wait_timeout 
+  }
+  timeouts {
+    create = var.dep_timeout
+    update = var.dep_timeout
+    delete = var.dep_timeout
   }
 }
 

@@ -111,3 +111,12 @@ variable "memory_limit" {
   description = "Memory limit for the VLLM container."
   default     = "48Gi" 
 }
+
+variable "dep_timeout" {
+  type        = string
+  description = "Timeout for the deployment"
+  default     = "65m"
+}
+variable "deployment_wait_timeout" {
+  default = "3600"
+}
