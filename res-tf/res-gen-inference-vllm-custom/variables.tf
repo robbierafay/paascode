@@ -27,7 +27,7 @@ variable "served_model_name" {
 variable "gpu_request" {
   type        = number
   description = "Number of GPUs to request."
-  default     = 2
+  default     = 1
 }
 
 variable "extra_engine_args" {
