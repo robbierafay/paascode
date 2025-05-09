@@ -105,3 +105,9 @@ variable "kubeconfig" {
   description = "Kubeconfig"
   type        = string
 }
+
+variable "memory_limit" {
+  type        = string
+  description = "Memory limit for the VLLM container."
+  default     = "48Gi" 
+}

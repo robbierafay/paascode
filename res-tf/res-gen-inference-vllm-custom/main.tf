@@ -121,13 +121,13 @@ resource "kubernetes_deployment" "vllm_model_server" {
             "-c",
           ]
           args = [
-            "vllm serve /models/${var.served_model_name} --trust-remote-code --tensor-parallel-size ${var.gpu_request} --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
+            "vllm serve /models/${var.served_model_name} --trust-remote-code --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
           ]
           port {
             container_port = 8000
           }
           env {
-            name  = "VLLM_LOG_LEVEL"
+            name  = "VLLM_LOGGING_LEVEL"
             value = "INFO"
           }
           volume_mount {
@@ -141,6 +141,7 @@ resource "kubernetes_deployment" "vllm_model_server" {
           resources {
             limits = {
               "${var.gpu_type}.com/gpu" = var.gpu_request
+              "memory"             = var.memory_limit
             }
             requests = {
               "${var.gpu_type}.com/gpu" = var.gpu_request
