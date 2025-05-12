@@ -168,6 +168,15 @@
               "type": "allowed"
             }
           }
+        },
+        {
+            "name": "memory_limit",
+            "valueType": "text",
+            "options": {
+              "override": {
+                "type": "allowed"
+              }
+            }
         }
       ],
       "sharing": {
