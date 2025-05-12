@@ -67,10 +67,7 @@ resource "kubernetes_deployment" "vllm_model_server" {
         #     type: Directory
         volume {
           name = "model-cache"
-          host_path {
-            path = "/nfstest2/models/"
-            type = "Directory"
-          }
+          empty_dir {}
         }
         
         volume {
@@ -80,53 +77,53 @@ resource "kubernetes_deployment" "vllm_model_server" {
             size_limit = "30Gi"
           }
         }
-        # init_container {
-        #   name  = "minio-downloader-init"
-        #   image = "minio/mc"
-        #   image_pull_policy = "IfNotPresent"
-        #   command = [
-        #     "/bin/sh",
-        #     "-c",
-        #   ]
-        #   args = [
-        #     <<-EOT
-        #       # echo "Attempting to set MinIO alias..."
-        #       set -e # Exit immediately if a command exits with a non-zero status.
+        init_container {
+          name  = "minio-downloader-init"
+          image = "minio/mc"
+          image_pull_policy = "IfNotPresent"
+          command = [
+            "/bin/sh",
+            "-c",
+          ]
+          args = [
+            <<-EOT
+              # echo "Attempting to set MinIO alias..."
+              set -e # Exit immediately if a command exits with a non-zero status.
 
-        #       echo "Attempting to set MinIO alias..."
-        #       echo "ednpoint: ${var.minio_endpoint}"
-        #       echo "access key: ${var.minio_access_key}"
-        #       echo "secret key: ${var.minio_secret_key}"
-        #       echo "Setting MinIO alias..."
-        #       mc alias set myminio "${var.minio_endpoint}" "${var.minio_access_key}" "${var.minio_secret_key}"
-        #       echo "Alias set successfully."
+              echo "Attempting to set MinIO alias..."
+              echo "ednpoint: ${var.minio_endpoint}"
+              echo "access key: ${var.minio_access_key}"
+              echo "secret key: ${var.minio_secret_key}"
+              echo "Setting MinIO alias..."
+              mc alias set myminio "${var.minio_endpoint}" "${var.minio_access_key}" "${var.minio_secret_key}"
+              echo "Alias set successfully."
 
-        #       echo "Attempting to download model from myminio/${var.bucket_name}/${var.model_data_path}/ to /models/${var.served_model_name}..."
-        #       mc cp --recursive myminio/${var.bucket_name}/${var.model_data_path}/ /models/${var.served_model_name}
-        #       echo "Model downloaded successfully from MinIO."
+              echo "Attempting to download model from myminio/${var.bucket_name}/${var.model_data_path}/ to /models/${var.served_model_name}..."
+              mc cp --recursive myminio/${var.bucket_name}/${var.model_data_path}/ /models/${var.served_model_name}
+              echo "Model downloaded successfully from MinIO."
 
-        #       echo "Checking if model config file exists..."
-        #       ls /models/${var.served_model_name}/config.json || exit 1
-        #       echo "Model verification successful."
-        #     EOT
-        #   ]
-        #   env {
-        #     name  = "MINIO_ENDPOINT"
-        #     value = var.minio_endpoint
-        #   }
-        #   env {
-        #     name  = "MINIO_ACCESS_KEY"
-        #     value = var.minio_access_key
-        #   }
-        #   env {
-        #     name  = "MINIO_SECRET_KEY"
-        #     value = var.minio_secret_key
-        #   }
-        #   volume_mount {
-        #     name       = "model-cache"
-        #     mount_path = "/models"
-        #   }
-        # }
+              echo "Checking if model config file exists..."
+              ls /models/${var.served_model_name}/config.json || exit 1
+              echo "Model verification successful."
+            EOT
+          ]
+          env {
+            name  = "MINIO_ENDPOINT"
+            value = var.minio_endpoint
+          }
+          env {
+            name  = "MINIO_ACCESS_KEY"
+            value = var.minio_access_key
+          }
+          env {
+            name  = "MINIO_SECRET_KEY"
+            value = var.minio_secret_key
+          }
+          volume_mount {
+            name       = "model-cache"
+            mount_path = "/models"
+          }
+        }
         container {
           name  = "vllm"
           image = var.vllm_image
@@ -135,7 +132,7 @@ resource "kubernetes_deployment" "vllm_model_server" {
             "-c",
           ]
           args = [
-            "vllm serve /models/tubitak_gemma_9b_turkish --trust-remote-code --distributed-executor-backend mp --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
+            "vllm serve /models/${var.served_model_name} --trust-remote-code --distributed-executor-backend mp --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
           ]
           port {
             container_port = 8000
