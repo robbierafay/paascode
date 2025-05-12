@@ -2,14 +2,14 @@
     "apiVersion": "eaas.envmgmt.io/v1",
     "kind": "ResourceTemplate",
     "metadata": {
-      "name": "res-gen-inference-vllm",
+      "name": "res-gen-inference-vllm-localmount",
       "annotations": {
         "eaas.envmgmt.io/releaseversion": "v3.3"
       },
       "project": "system-catalog"
     },
     "spec": {
-      "version": "v3-custom-model",
+      "version": "v1-localmount",
       "provider": "opentofu",
       "providerOptions": {
         "openTofu": {
@@ -25,7 +25,7 @@
       },
       "repositoryOptions": {
         "name": "passcode",
-        "branch": "main",
+        "branch": "nfs-mount",
         "directoryPath": "res-tf/res-gen-inference-vllm-custom"
       },
       "variables": [
@@ -56,42 +56,6 @@
           "value": "nvidia",
           "options": {
             "description": "GPU Vendor",
-            "override": {
-              "type": "allowed"
-            }
-          }
-        },
-        {
-          "name": "minio_endpoint",
-          "valueType": "text",
-          "options": {
-            "override": {
-              "type": "allowed"
-            }
-          }
-        },
-        {
-          "name": "minio_access_key",
-          "valueType": "text",
-          "options": {
-            "override": {
-              "type": "allowed"
-            }
-          }
-        },
-        {
-          "name": "minio_secret_key",
-          "valueType": "text",
-          "options": {
-            "override": {
-              "type": "allowed"
-            }
-          }
-        },
-        {
-          "name": "bucket_name",
-          "valueType": "text",
-          "options": {
             "override": {
               "type": "allowed"
             }
@@ -168,6 +132,15 @@
               "type": "allowed"
             }
           }
+        },
+        {
+            "name": "memory_limit",
+            "valueType": "text",
+            "options": {
+              "override": {
+                "type": "allowed"
+              }
+            }
         }
       ],
       "sharing": {

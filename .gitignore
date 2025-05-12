@@ -1,0 +1,10 @@
+res-tf/res-gen-inference-vllm-custom/.terraform/providers/registry.terraform.io/hashicorp/random/3.7.2/darwin_arm64/terraform-provider-random_v3.7.2_x5
+res-tf/res-gen-inference-vllm-custom/.terraform/providers/registry.terraform.io/hashicorp/random/3.7.2/darwin_arm64/LICENSE.txt
+res-tf/res-gen-inference-vllm-custom/.terraform/providers/registry.terraform.io/hashicorp/kubernetes/2.36.0/darwin_arm64/terraform-provider-kubernetes_v2.36.0_x5
+res-tf/res-gen-inference-vllm-custom/.terraform/providers/registry.terraform.io/hashicorp/kubernetes/2.36.0/darwin_arm64/LICENSE.txt
+res-tf/res-gen-inference-vllm-custom/.terraform.lock.hcl
+res-tf/res-gen-inference-vllm-custom/.terraform.tfstate.lock.info
+res-tf/res-gen-inference-vllm-custom/kubeconfig.yaml
+res-tf/res-gen-inference-vllm-custom/terraform.tfstate
+res-tf/res-gen-inference-vllm-custom/terraform.tfstate.backup
+res-tf/res-gen-inference-vllm-custom/terraform.tfvars
