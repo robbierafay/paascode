@@ -1,22 +1,22 @@
-variable "minio_endpoint" {
-  type        = string
-  description = "The MinIO endpoint."
-}
+# variable "minio_endpoint" {
+#   type        = string
+#   description = "The MinIO endpoint."
+# }
 
-variable "minio_access_key" {
-  type        = string
-  description = "The MinIO access key."
-}
+# variable "minio_access_key" {
+#   type        = string
+#   description = "The MinIO access key."
+# }
 
-variable "minio_secret_key" {
-  type        = string
-  description = "The MinIO secret key."
-}
+# variable "minio_secret_key" {
+#   type        = string
+#   description = "The MinIO secret key."
+# }
 
-variable "bucket_name" {
-  type        = string
-  description = "The name of the MinIO bucket."
-}
+# variable "bucket_name" {
+#   type        = string
+#   description = "The name of the MinIO bucket."
+# }
 
 variable "served_model_name" {
   type        = string
@@ -45,7 +45,7 @@ variable "vllm_image" {
 variable "model_data_path" {
   type        = string
   description = "The path to the model data inside the MinIO bucket and the mount point inside the container (relative to /models)."
-  default     = "model_data"
+  default     = ""
 }
 
 variable "namespace" {
@@ -109,14 +109,14 @@ variable "kubeconfig" {
 variable "memory_limit" {
   type        = string
   description = "Memory limit for the VLLM container."
-  default     = "48Gi" 
+  default     = "48Gi"
 }
 
-variable "dep_timeout" {
-  type        = string
-  description = "Timeout for the deployment"
-  default     = "65m"
-}
-variable "deployment_wait_timeout" {
-  default = "3600"
-}
+# variable "dep_timeout" {
+#   type        = string
+#   description = "Timeout for the deployment"
+#   default     = "65m"
+# }
+# variable "deployment_wait_timeout" {
+#   default = "3600"
+# }

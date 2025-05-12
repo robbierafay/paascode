@@ -68,7 +68,7 @@ resource "kubernetes_deployment" "vllm_model_server" {
         volume {
           name = "model-cache"
           host_path {
-            path = "/nfstest2/models/"
+            path = "${var.model_data_path}"
             type = "Directory"
           }
         }
@@ -135,7 +135,7 @@ resource "kubernetes_deployment" "vllm_model_server" {
             "-c",
           ]
           args = [
-            "vllm serve /models/tubitak_gemma_9b_turkish --trust-remote-code --distributed-executor-backend mp --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
+            "vllm serve /models --trust-remote-code --distributed-executor-backend mp --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
           ]
           port {
             container_port = 8000
@@ -164,13 +164,13 @@ resource "kubernetes_deployment" "vllm_model_server" {
         }
       }
     }
-    progress_deadline_seconds = var.deployment_wait_timeout 
+    # progress_deadline_seconds = var.deployment_wait_timeout 
   }
-  timeouts {
-    create = var.dep_timeout
-    update = var.dep_timeout
-    delete = var.dep_timeout
-  }
+  # timeouts {
+  #   create = var.dep_timeout
+  #   update = var.dep_timeout
+  #   delete = var.dep_timeout
+  # }
 }
 
 resource "kubernetes_service" "service" {
