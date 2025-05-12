@@ -2,7 +2,7 @@
     "apiVersion": "eaas.envmgmt.io/v1",
     "kind": "EnvironmentTemplate",
     "metadata": {
-      "name": "system-k8s-inference-vllm",
+      "name": "system-k8s-inference-vllm-minio",
       "description": "Deploy models with vLLM in Kubernetes environments",
       "labels": {
         "paas.envmgmt.io/objectType": "inferences"
@@ -21,7 +21,7 @@
       "project": "system-catalog"
     },
     "spec": {
-      "version": "v3-custom-model",
+      "version": "v1-minio",
       "resources": [
         {
           "type": "dynamic",
@@ -34,9 +34,9 @@
         {
           "type": "dynamic",
           "kind": "resourcetemplate",
-          "name": "res-gen-inference-vllm",
+          "name": "res-gen-inference-vllm-minio",
           "resourceOptions": {
-            "version": "v3-custom-model"
+            "version": "v1-minio"
           },
           "dependsOn": [
             {
@@ -73,7 +73,7 @@
             "override": {
               "type": "notallowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.hserver"
+                "resource.res-gen-inference-vllm-minio.hserver"
               ]
             }
           }
@@ -86,7 +86,7 @@
             "override": {
               "type": "notallowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.clientkeydata"
+                "resource.res-gen-inference-vllm-minio.clientkeydata"
               ]
             }
           }
@@ -99,7 +99,7 @@
             "override": {
               "type": "notallowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.clientcertificatedata"
+                "resource.res-gen-inference-vllm-minio.clientcertificatedata"
               ]
             }
           }
@@ -112,7 +112,7 @@
             "override": {
               "type": "notallowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.certificateauthoritydata"
+                "resource.res-gen-inference-vllm-minio.certificateauthoritydata"
               ]
             }
           }
@@ -125,7 +125,7 @@
             "override": {
               "type": "notallowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.kubeconfig"
+                "resource.res-gen-inference-vllm-minio.kubeconfig"
               ]
             }
           }
@@ -139,7 +139,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.namespace"
+                "resource.res-gen-inference-vllm-minio.namespace"
               ]
             },
             "displayMetadata": {
@@ -158,7 +158,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.minio_endpoint"
+                "resource.res-gen-inference-vllm-minio.minio_endpoint"
               ]
             },
             "displayMetadata": {
@@ -178,7 +178,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.minio_access_key"
+                "resource.res-gen-inference-vllm-minio.minio_access_key"
               ]
             },
             "displayMetadata": {
@@ -198,7 +198,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.minio_secret_key"
+                "resource.res-gen-inference-vllm-minio.minio_secret_key"
               ]
             },
             "displayMetadata": {
@@ -217,7 +217,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.bucket_name"
+                "resource.res-gen-inference-vllm-minio.bucket_name"
               ]
             },
             "displayMetadata": {
@@ -236,7 +236,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.served_model_name"
+                "resource.res-gen-inference-vllm-minio.served_model_name"
               ]
             },
             "displayMetadata": {
@@ -255,7 +255,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.model_data_path"
+                "resource.res-gen-inference-vllm-minio.model_data_path"
               ]
             },
             "displayMetadata": {
@@ -274,7 +274,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.host_name"
+                "resource.res-gen-inference-vllm-minio.host_name"
               ]
             },
             "displayMetadata": {
@@ -294,7 +294,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.ssl_certificate"
+                "resource.res-gen-inference-vllm-minio.ssl_certificate"
               ]
             },
             "displayMetadata": {
@@ -314,7 +314,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.ssl_private_key"
+                "resource.res-gen-inference-vllm-minio.ssl_private_key"
               ]
             },
             "displayMetadata": {
@@ -334,7 +334,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.ingress_class_name"
+                "resource.res-gen-inference-vllm-minio.ingress_class_name"
               ]
             },
             "displayMetadata": {
@@ -354,7 +354,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.gpu_type"
+                "resource.res-gen-inference-vllm-minio.gpu_type"
               ]
             },
             "displayMetadata": {
@@ -396,7 +396,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.gpu_request"
+                "resource.res-gen-inference-vllm-minio.gpu_request"
               ]
             },
             "displayMetadata": {
@@ -415,7 +415,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.extra_engine_args"
+                "resource.res-gen-inference-vllm-minio.extra_engine_args"
               ]
             },
             "displayMetadata": {
@@ -435,7 +435,7 @@
             "override": {
               "type": "allowed",
               "selectors": [
-                "resource.res-gen-inference-vllm.vllm_image"
+                "resource.res-gen-inference-vllm-minio.vllm_image"
               ]
             },
             "displayMetadata": {
@@ -506,7 +506,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.namespace"
+                    "resource.res-gen-inference-vllm-minio.namespace"
                   ]
                 },
                 "displayMetadata": {
@@ -526,7 +526,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.ssl_certificate"
+                    "resource.res-gen-inference-vllm-minio.ssl_certificate"
                   ]
                 },
                 "displayMetadata": {
@@ -546,7 +546,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.vllm_image"
+                    "resource.res-gen-inference-vllm-minio.vllm_image"
                   ]
                 },
                 "displayMetadata": {
@@ -565,7 +565,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.bucket_name"
+                    "resource.res-gen-inference-vllm-minio.bucket_name"
                   ]
                 },
                 "displayMetadata": {
@@ -584,7 +584,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.host_name"
+                    "resource.res-gen-inference-vllm-minio.host_name"
                   ]
                 },
                 "displayMetadata": {
@@ -604,7 +604,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.gpu_type"
+                    "resource.res-gen-inference-vllm-minio.gpu_type"
                   ]
                 },
                 "displayMetadata": {
@@ -623,7 +623,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.served_model_name"
+                    "resource.res-gen-inference-vllm-minio.served_model_name"
                   ]
                 },
                 "displayMetadata": {
@@ -642,7 +642,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.model_data_path"
+                    "resource.res-gen-inference-vllm-minio.model_data_path"
                   ]
                 },
                 "displayMetadata": {
@@ -662,7 +662,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.ingress_class_name"
+                    "resource.res-gen-inference-vllm-minio.ingress_class_name"
                   ]
                 },
                 "displayMetadata": {
@@ -703,7 +703,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.extra_engine_args"
+                    "resource.res-gen-inference-vllm-minio.extra_engine_args"
                   ]
                 },
                 "displayMetadata": {
@@ -722,7 +722,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.minio_endpoint"
+                    "resource.res-gen-inference-vllm-minio.minio_endpoint"
                   ]
                 },
                 "displayMetadata": {
@@ -742,7 +742,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.minio_access_key"
+                    "resource.res-gen-inference-vllm-minio.minio_access_key"
                   ]
                 },
                 "displayMetadata": {
@@ -762,7 +762,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.ssl_private_key"
+                    "resource.res-gen-inference-vllm-minio.ssl_private_key"
                   ]
                 },
                 "displayMetadata": {
@@ -782,7 +782,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.gpu_request"
+                    "resource.res-gen-inference-vllm-minio.gpu_request"
                   ]
                 },
                 "displayMetadata": {
@@ -802,7 +802,7 @@
                 "override": {
                   "type": "allowed",
                   "selectors": [
-                    "resource.res-gen-inference-vllm.minio_secret_key"
+                    "resource.res-gen-inference-vllm-minio.minio_secret_key"
                   ]
                 },
                 "displayMetadata": {
