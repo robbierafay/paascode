@@ -333,7 +333,7 @@
         {
             "name": "Memory Limit",
             "valueType": "text",
-            "value": "1",
+            "value": "48Gi",
             "options": {
               "override": {
                 "type": "allowed",
