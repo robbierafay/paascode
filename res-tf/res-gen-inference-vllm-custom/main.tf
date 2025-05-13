@@ -48,6 +48,9 @@ resource "kubernetes_deployment" "vllm_model_server" {
         app = var.namespace
       }
     }
+    strategy {
+      type = "Recreate"
+    }
     template {
       metadata {
         labels = {
@@ -135,7 +138,7 @@ resource "kubernetes_deployment" "vllm_model_server" {
             "-c",
           ]
           args = [
-            "vllm serve /models --trust-remote-code --distributed-executor-backend mp --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
+            "sleep 300 && vllm serve /models/ --trust-remote-code --distributed-executor-backend mp --tensor-parallel-size ${var.gpu_request} --gpu-memory-utilization 0.9 --served-model-name ${var.served_model_name} --api-key ${random_uuid.api_key.result} ${var.extra_engine_args}"
           ]
           port {
             container_port = 8000
