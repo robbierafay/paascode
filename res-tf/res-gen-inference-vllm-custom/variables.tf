@@ -112,11 +112,11 @@ variable "memory_limit" {
   default     = "48Gi"
 }
 
-# variable "dep_timeout" {
-#   type        = string
-#   description = "Timeout for the deployment"
-#   default     = "65m"
-# }
-# variable "deployment_wait_timeout" {
-#   default = "3600"
-# }
+variable "dep_timeout" {
+  type        = string
+  description = "Timeout for the deployment"
+  default     = "65m"
+}
+variable "deployment_wait_timeout" {
+  default = "3600"
+}
