@@ -48,6 +48,9 @@ resource "kubernetes_deployment" "vllm_model_server" {
         app = var.namespace
       }
     }
+    strategy {
+      type = "Recreate"
+    }
     template {
       metadata {
         labels = {
