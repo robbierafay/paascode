@@ -187,16 +187,6 @@
           }
         ]
       },
-      "versionState": "draft",
-      "artifactWorkflowHandler": {
-        "data": {
-          "config": {
-            "type": "container",
-            "container": {
-              "image": "registry.dev.rafay-edge.net/rafay/repodriver:RC-1000-custom-model-3"
-            }
-          }
-        }
-      }
+      "versionState": "draft"
     }
   }
